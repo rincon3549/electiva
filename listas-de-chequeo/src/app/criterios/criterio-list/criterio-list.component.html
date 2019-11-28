@@ -1,0 +1,120 @@
+<div class="container">
+    <h2>CRITERIOS</h2>
+    <div class="row">
+        <div class="container">
+            <button class="btn btn-primary pull-right" (click)="openModalAdd(add)" >add</button>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>nombre</th>
+                        <th>descripcion</th>
+                        <th>tipo</th>
+                        <th>peso</th>
+                        <th>kiler question</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let criterio of criterios">
+                        <td width=20 >{{criterio.nombre}}</td>
+                        <td width=500>{{criterio.descripcion}}</td>
+                        <td>{{criterio.tipo}}</td>
+                        <td>{{criterio.peso}}</td>
+                        <td>{{criterio.killer}}</td>
+                        <td>
+                           <button class="btn btn-warning btn-sm" (click)="openModalEdit(edit, criterio)">edit</button> &nbsp;
+                           <button class="btn btn-danger btn-sm" (click)="openModalDelete(delete, criterio._id)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #add>
+        <div class="container">
+          <h4 class="modal-title pull-left">Criterio</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <form>
+             <label for="nombre">Nombre</label>
+             <input type="text" class="form-control" name="nombre" [(ngModel)]="criterio.nombre">
+             <p class="text-danger">{{errorMsg.nombre}}</p>
+             <label for="descripcion">Descripcion</label>
+             <textarea type=text class="form-control" name="descripcion" [(ngModel)]="criterio.descripcion"></textarea>
+             <p class="text-danger">{{errorMsg.descripcion}}</p>
+             <div class="form-group">
+                <label for="sel1">Tipo</label>
+                <select  class="form-control" name="tipo" [(ngModel)]="criterio.tipo">
+                  <option value="Calidad">Calidad</option>
+                  <option value="Servicio">Servicio</option>
+                  <option value="Oportunidad">Oportunidad</option>
+                </select>
+              </div>
+             <label for="peso">Peso</label>
+             <input type="number" class="form-control" name="peso" [(ngModel)]="criterio.peso" min="1">
+             <p class="text-danger">{{errorMsg.peso}}</p>
+             <div class="form-group">
+                <label for="sel1">killer question</label>
+                <select  class="form-control" name="killer" [(ngModel)]="criterio.killer">
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+             <button class="btn btn-primary" (click)="onSave()">add</button>
+         </form>
+        </div>
+</ng-template>
+
+<ng-template #edit>
+        <div class="container">
+          <h4 class="modal-title pull-left">edit Criterio</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <form>
+             <label for="nombre">Nombre</label>
+             <input type="text" class="form-control" name="nombre" [(ngModel)]="editCriterio.nombre">
+             <p class="text-danger">{{errorMsg.nombre}}</p>
+             <label for="descripcion">Descripcion</label>
+             <textarea type=text class="form-control" name="descripcion" [(ngModel)]="editCriterio.descripcion"></textarea>
+             <p class="text-danger">{{errorMsg.descripcion}}</p>
+             <label for="tipo">Tipo</label>
+             <input type="text" class="form-control" name="tipo" [(ngModel)]="editCriterio.tipo">
+             <p class="text-danger">{{errorMsg.tipo}}</p>
+             <label for="peso">Peso</label>
+             <input type="number" class="form-control" name="peso" [(ngModel)]="editCriterio.peso" min="1">
+             <p class="text-danger">{{errorMsg.peso}}</p>
+             <div class="form-group">
+                <label for="sel1">killer question</label>
+                <select  class="form-control" name="killer"  [(ngModel)]="editCriterio.killer">
+                  <option value="SI">SI</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+             <p class="text-danger">{{errorMsg.killer}}</p>
+             <button class="btn btn-primary" (click)="onUpdate()">actualizar</button>
+         </form>
+        </div>
+</ng-template>
+
+<ng-template #delete>
+        <div class="container">
+          <h4 class="modal-title pull-left">Eliminar Criterio</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <p>deseas eliminar el criterio?</p>
+            <button class="btn btn-primary btn-sm" (click)="modalRef.hide()">NO</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteCriterio()">Si</button>
+        </div>
+</ng-template>

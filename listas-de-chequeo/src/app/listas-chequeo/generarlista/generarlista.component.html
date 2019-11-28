@@ -1,0 +1,215 @@
+<div class="container">
+  <h2>LISTAS DE CHEQUEO</h2>
+  <div class="row">
+    <div class="container">
+      <button class="btn btn-success btn-sm" (click)="openModalAdd(add)">crear</button>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>nombre</th>
+            <th>Plantilla</th>
+            <th>evaluacion</th>
+            <th>estado</th>
+            <th>Funciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let Lista of Listas">
+            <td>{{Lista.id}}</td>
+            <td width=200>{{Lista.nombre}}</td>
+            <td>{{Lista.plantilla.nombre}}</td>
+            <td>{{Lista.evaluacion}}</td>
+            <td>{{Lista.estado}}</td>
+            <td class="row">
+              <button *ngIf="Lista.estado==='Pendiente'" class="btn btn-warning btn-sm col"
+                (click)="openModalDilegenciar(modificar, Lista)">Diligenciar</button>&nbsp;
+              <button *ngIf="Lista.estado==='Pendiente'" class="btn btn-danger btn-sm col"
+                (click)="openModalDelete(delete, Lista._id, Lista.estado)">Eliminar</button>&nbsp;
+              <button *ngIf="Lista.estado==='Válido' || Lista.estado==='Insuficiente'"
+                class="btn btn-dark btn-sm col" (click)="openModalPDF(PDF, Lista)">PDF</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<ng-template #add>
+  <div class="container">
+    <h4 class="modal-title pull-left">Crear Lista De Chequeo</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <label for="nombre">Nombre</label>
+      <input type="text" class="form-control" name="nombre" [(ngModel)]="Lista.nombre">
+      <p class="text-danger">{{errorMsg.nombre}}</p>
+      <label for="observacion">Observacion</label>
+      <textarea type=text class="form-control" name="observacion" [(ngModel)]="Lista.observacion"></textarea>
+      <p class="text-danger">{{errorMsg.observacion}}</p>
+
+      <label for="referencia">Referencia</label>
+      <input type="text" class="form-control" name="estatus" [(ngModel)]="Lista.referencia">
+      <p class="text-danger">{{errorMsg.referencia}}</p>
+      <label for="evaluacion">evaluacion</label>
+      <input type="number" class="form-control" name="evaluacion" [(ngModel)]="Lista.evaluacion">
+      <div class="form-group">
+        <label for="sel1">Plantilla:</label>
+        <select class="form-control" name="plantilla" (change)="onSelect()" [(ngModel)]="plantillaSelect">
+          <option value={{plantilla._id}} *ngFor="let plantilla of plantillas">
+            {{plantilla.nombre}}
+          </option>
+        </select>
+
+      </div>
+      <br>
+      <button class="btn btn-primary btn-sm" (click)="onSave()">add</button>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #modificar>
+  <div class="container">
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <br>
+    <div class="container border">
+      <div class="row">
+        <div class="col">
+          <h6><small>Inspector:</small></h6>
+          <h6><small>Referencia:</small></h6>
+        </div>
+        <div class="col">
+          <h6>Listas de Chequeo</h6>
+          <h4 class="modal-title pull-left">{{ListaDil.nombre}}</h4>
+        </div>
+        <div class="col">
+          <h6><small>RRQ-{{year}}-{{ListaDil.id}}</small></h6>
+          <h6><small>Versionamiento:</small></h6>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="modal-body border">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Ponderado</th>
+            <th>Criterio</th>
+            <th>Respuesta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let criterio of ListaDil.plantilla.criterios; let i = index;">
+            <td>{{criterio.tipo}}</td>
+            <td>{{criterio.peso}}</td>
+            <td>{{criterio.descripcion}}</td>
+            <td>
+              <form>
+                <select id="prueba" class="btn btn-basic" name="respuesta"
+                  [(ngModel)]="ListaDil.plantilla.criterios[i].respuesta">
+                  <option value="VERDADERO">VERDADERO</option>
+                  <option value="FALSO">FALSO</option>
+                  <option value="NO APLICA">NO APLICA</option>
+                </select>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <div class="modal-footer border">
+      <div class="container col-lg-7">
+        <p>(*)"killer questions" incumplidas:{{counter}}</p>
+        <p>valor minimo requerido:{{porce}}%</p>
+        <p>resultado:{{resultado}}%</p>
+      </div>
+      <div class="container col-lg-3 ">
+        <button class="btn btn-info btn-sm" (click)="onSaveList()">guardar</button>
+        <button class="btn btn-secondary btn-sm" (click)="onVersionar()">Versionar</button>
+      </div>
+    </div>
+    <br>
+  </div>
+
+</ng-template>
+
+<ng-template #delete>
+  <div class="container">
+    <h4 class="modal-title pull-left">Eliminar Lista de Chequeo</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>deseas eliminar Lista de Chequeo?</p>
+    <button class="btn btn-primary btn-sm" (click)="modalRef.hide()">NO</button>
+    <button class="btn btn-danger btn-sm" (click)="onDelete()">Si</button>
+  </div>
+</ng-template>
+
+<ng-template #PDF>
+  <div class="container">
+      <div class="example-config">
+          <button kendo-button (click)="pdf.saveAs('ListaDeChequeo.pdf')" class="btn btn-dark sm">
+            Descargar PDF
+          </button>
+       </div>
+      <kendo-pdf-export #pdf paperSize="A4" margin="0.5cm" >
+          <div class="container">
+              <br>
+              <div class="container border">
+                <div class="row">
+                  <div class="col">
+                    <h6><small>Inspector:Sebastian Rincon</small></h6>
+                    <h6><small>Referencia:{{ListaDil.referencia}}</small></h6>
+                  </div>
+                  <div class="col">
+                    <h6>Listas de Chequeo</h6>
+                    <h6 class="modal-title pull-left">{{ListaDil.nombre}}</h6>
+                  </div>
+                  <div class="col">
+                    <h6><small>RRQ-{{year}}-{{ListaDil.id}}</small></h6>
+                    <h6><small>Versionamiento:28-11-2019</small></h6>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="modal-body border">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Tipo</th>
+                      <th>Criterio</th>
+                      <th>Respuesta</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let criterio of ListaDil.plantilla.criterios; let i = index;">
+                      <td>{{criterio.tipo}}</td>
+                      <td>{{criterio.descripcion}}</td>
+                      <td>{{criterio.respuesta}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <br>
+              <div class="modal-footer border">
+                <div class="container col-lg-7">
+                  <p>(*)"killer questions" incumplidas:{{counter}}</p>
+                  <p>valor minimo requerido:{{porce}}%</p>
+                  <p>resultado:{{ListaDil.evaluacion}}%</p>
+                  <p>Estado:{{ListaDil.estado}}</p>
+                </div>
+              </div>
+              <br>
+            </div>
+      </kendo-pdf-export>
+  </div>
+</ng-template>

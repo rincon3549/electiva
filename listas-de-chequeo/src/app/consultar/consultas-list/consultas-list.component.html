@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="row">
+      <div class="container">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>nombre</th>
+              <th>Plantilla</th>
+              <th>evaluacion</th>
+              <th>estado</th>
+              <th>Funciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let Lista of Listas">
+              <td>{{Lista.id}}</td>
+              <td width=200>{{Lista.nombre}}</td>
+              <td>{{Lista.plantilla.nombre}}</td>
+              <td>{{Lista.evaluacion}}</td>
+              <td>{{Lista.estado}}</td>
+              <td class="row">
+                <button *ngIf="Lista.estado==='Válido' || Lista.estado==='Insuficiente'"
+                  class="btn btn-dark btn-sm col" (click)="openModalPDF(PDF, Lista)">PDF</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>
+<ng-template #PDF>
+    <div class="container" >
+        <div class="example-config">
+            <button kendo-button (click)="pdf.saveAs('ListaDeChequeo.pdf')" class="btn btn-dark sm">
+              Descargar PDF
+            </button>
+         </div>
+        <kendo-pdf-export #pdf paperSize="A4" margin="0.5cm" >
+            <div class="container">
+                <br>
+                <div class="container border">
+                  <div class="row">
+                    <div class="col">
+                      <h6><small>Inspector:Sebastian Rincon</small></h6>
+                      <h6><small>Referencia:{{ListaDil.referencia}}</small></h6>
+                    </div>
+                    <div class="col">
+                      <h6>Listas de Chequeo</h6>
+                      <h6 class="modal-title pull-left">{{ListaDil.nombre}}</h6>
+                    </div>
+                    <div class="col">
+                      <h6><small>RRQ-{{year}}-{{ListaDil.id}}</small></h6>
+                      <h6><small>Versionamiento:28-11-2019</small></h6>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="modal-body border">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Tipo</th>
+                        <th>Criterio</th>
+                        <th>Respuesta</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let criterio of ListaDil.plantilla.criterios; let i = index;">
+                        <td>{{criterio.tipo}}</td>
+                        <td>{{criterio.descripcion}}</td>
+                        <td>{{criterio.respuesta}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <br>
+                <div class="modal-footer border">
+                  <div class="container col-lg-7">
+                    <p>(*)"killer questions" incumplidas:{{counter}}</p>
+                    <p>valor minimo requerido:{{porce}}%</p>
+                    <p>resultado:{{ListaDil.evaluacion}}%</p>
+                    <p>Estado:{{ListaDil.estado}}</p>
+                  </div>
+                </div>
+                <br>
+              </div>
+        </kendo-pdf-export>
+    </div>
+  </ng-template>

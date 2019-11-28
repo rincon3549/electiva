@@ -1,0 +1,167 @@
+<div class="container">
+  <h2>PLANTILLAS</h2>
+  <div class="row">
+    <div class="container">
+      <button class="btn btn-primary pull-right" (click)="openModalAdd(add)">add</button>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th width=40>nombre</th>
+            <th width=35>descripcion</th>
+            <th width=35>Funciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let plantilla of plantillas">
+            <td>{{plantilla.nombre}}</td>
+            <td>{{plantilla.descripcion}}</td>
+            <td>
+              <button class="btn btn-warning btn-sm" (click)="openModalEdit(edit, plantilla)">edit</button>&nbsp;
+              <button class="btn btn-danger btn-sm" (click)="openModalDelete(delete, plantilla._id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #add>
+  <div class="container">
+    <h4 class="modal-title pull-left">Plantilla</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <label for="nombre">Nombre</label>
+      <input type="text" class="form-control" name="nombre" [(ngModel)]="plantilla.nombre">
+      <p class="text-danger">{{errorMsg.nombre}}</p>
+      <label for="descripcion">Descripcion</label>
+      <textarea type=text class="form-control" name="descripcion" [(ngModel)]="plantilla.descripcion"></textarea>
+      <p class="text-danger">{{errorMsg.descripcion}}</p>
+
+      <label for="peso">Estado</label>
+      <input type="text" class="form-control" name="estatus" [(ngModel)]="plantilla.status">
+      <p class="text-danger">{{errorMsg.status}}</p>
+      <label for="logCreatedBy">logCreatedBy</label>
+      <input type="text" class="form-control" name="logCreatedBy" [(ngModel)]="plantilla.logCreatedBy">
+      <p class="text-danger">{{errorMsg.logCreatedBy}}</p>
+      <button class="btn btn-primary btn-sm" (click)="openModalSelectCriterios(select)">Criterios para la
+        plantilla</button><br>
+      <br>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>nombre</th>
+            <th>descripcion</th>
+            <th>Funciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let criterio of plantilla.criterios">
+            <td width=20>{{criterio.nombre}}</td>
+            <td width=500>{{criterio.descripcion}}</td>
+            <td>
+              <button class="btn btn-warning btn-sm">edit</button>
+              <button class="btn btn-danger btn-sm">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-primary btn-sm" (click)="onSave()">add</button>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #select>
+  <br>
+  <p>Criterios</p>
+
+  <form *ngFor="let criterio of criterios">
+    <div class="form-check">
+      <label class="form-check-label" for="radio1">
+        <input type="radio" class="form-check-input" id="radio1" name="optradio"
+          (click)="onSelect(criterio)">{{criterio.nombre}}
+      </label>
+    </div>
+  </form>
+  <button class="btn btn-primary btn-sm" (click)="onCloseSelec()">selec</button>
+
+</ng-template>
+<ng-template #selectEDIT>
+  <div class="container">
+      <p>Criterios</p>
+      <hr>
+      <form *ngFor="let criterio of criterios">
+        <div class="form-check">
+          <label class="form-check-label" for="radio1">
+            <input type="radio" class="form-check-input" id="radio1" name="optradio"
+              (click)="onSelect(criterio)">{{criterio.nombre}}
+          </label>
+        </div>
+      </form>
+      <hr>
+      <button class="btn btn-primary btn-sm" (click)="onCloseSelecEDIT()">selec</button>
+      <br>
+  </div>
+</ng-template>
+
+<ng-template #delete>
+  <div class="container">
+    <h4 class="modal-title pull-left">Eliminar Plantilla</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>deseas eliminar la plantilla?</p>
+    <button class="btn btn-primary btn-sm" (click)="modalRef.hide()">NO</button>
+    <button class="btn btn-danger btn-sm" (click)="deleteCriterio()">Si</button>
+  </div>
+</ng-template>
+
+<ng-template #edit>
+  <div class="container">
+    <h4 class="modal-title pull-left">editar Plantilla</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <label for="nombre">Nombre</label>
+      <input type="text" class="form-control" name="nombre" [(ngModel)]="editPlantilla.nombre">
+      <p class="text-danger">{{errorMsg.nombre}}</p>
+      <label for="descripcion">Descripcion</label>
+      <textarea type=text class="form-control" name="descripcion" [(ngModel)]="editPlantilla.descripcion"></textarea>
+      <p class="text-danger">{{errorMsg.descripcion}}</p>
+
+      <label for="peso">Estado</label>
+      <input type="text" class="form-control" name="estatus" [(ngModel)]="editPlantilla.status">
+      <p class="text-danger">{{errorMsg.status}}</p>
+      <label for="logCreatedBy">logCreatedBy</label>
+      <input type="text" class="form-control" name="logCreatedBy" [(ngModel)]="editPlantilla.logCreatedBy">
+      <p class="text-danger">{{errorMsg.logCreatedBy}}</p>
+      <button class="btn btn-primary btn-sm" (click)="openModalSelectCriteriosEDIT(selectEDIT)">Criterios para la
+        plantilla</button><br>
+      <br>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>nombre</th>
+            <th>descripcion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let criterio of editPlantilla.criterios">
+            <td width=20>{{criterio.nombre}}</td>
+            <td width=500>{{criterio.descripcion}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-primary btn-sm" (click)="onUpdate()">Actualizar</button>
+    </form>
+  </div>
+</ng-template>

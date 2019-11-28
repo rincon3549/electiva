@@ -1,0 +1,36 @@
+<div *ngIf="validacion != 0">
+
+    <div class="jumbotron text-center"><button class="btn btn-link sm" (click)="cerrar()">Cerrar Sesión</button>
+      <h1> App Listas de chequeo</h1>
+      <a class="" routerLink="">   Inicio   </a> &nbsp;  <a *ngIf="usuario.rol === 'Administrador'" class="" routerLink="/criterios" (click)="onConten()">    Criterios   </a>&nbsp;  <a *ngIf="usuario.rol === 'Administrador'" (click)="onConten()" class="" routerLink="/plantillas">  Plantillas  </a> &nbsp;  <a *ngIf="usuario.rol === 'staff'" (click)="onConten()" class="" routerLink="/listas">  Listas de Chequeo  </a> &nbsp;  <a *ngIf="usuario.rol === 'Consulta'" class=""(click)="onConten()" routerLink="/consulta">  Consulta  </a>
+    </div>
+
+</div>
+<div *ngIf="validacion == 0">
+    <div class="sidenav">
+        <div class="login-main-text">
+           <h2><br>Application<br> List check</h2>
+           <p>Login  to access.</p>
+        </div>
+     </div>
+     <div class="main">
+        <div class="col-md-6 col-sm-12">
+           <div class="login-form">
+              <form>
+                 <div class="form-group">
+                    <label>User Name</label>
+                    <input type="text" class="form-control" name="user" placeholder="User Name" [(ngModel)]="usuario.user_login">
+                 </div>
+                 <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="pass" placeholder="Password" [(ngModel)]="usuario.pass">
+                 </div>
+                 <button type="submit" class="btn btn-black" (click)="validar()">Login</button>
+              </form>
+           </div>
+        </div>
+     </div>
+</div>
+<div *ngIf="contenido != 0" class="container">
+<router-outlet></router-outlet>
+</div>
